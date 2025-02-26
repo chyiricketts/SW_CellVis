@@ -31,14 +31,6 @@ def generate_image(crop_size, color_mode, overlay_mask):
     img_base64 = base64.b64encode(buf.read()).decode("utf-8")
     return img_base64
 
-@app.route("/")
-def index():
-    img_base64 = generate_image(200, "Original", False)
-    return render_template("singleimage.html", image_data=f"data:image/png;base64,{img_base64}")
-
-    
-    #return render_template("singleimage.html")
-
 @app.route("/update_graph", methods=["POST"])
 def update_graph():
     data = request.json
@@ -48,6 +40,18 @@ def update_graph():
     
     img_base64 = generate_image(crop_size, color_mode, overlay_mask)
     return jsonify({"image": f"data:image/png;base64,{img_base64}"})
+
+@app.route("/open_wholeimage")
+def open_wholeimage():
+    img_base64 = generate_image(200, "Original", False)
+    return render_template("wholeimage.html", image_data=f"data:image/png;base64,{img_base64}")
+
+
+
+@app.route("/")
+def index():
+    return render_template("index.html")
+
 
 if __name__ == "__main__":
     app.run(debug=True)

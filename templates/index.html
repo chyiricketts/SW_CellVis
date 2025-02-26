@@ -3,9 +3,8 @@
     <head>
         <title>Data Vizualization</title>
         <meta charset="utf-8"/>
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-        <link rel="stylesheet" href="../static/css/uploads_style.css"> 
-        
+        <link rel="stylesheet" href="../static/css/index.css"> 
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         
     </head>
 
@@ -46,6 +45,10 @@
 
         <div class = 'title-container'>
             <h2>Updates</h2>
+            
+            <button onclick="window.location.href='/open_wholeimage';">Generate Whole Image</button>
+
+
 
         {% if error %}
             <p class = "error">{{ error }}</p>
@@ -56,8 +59,12 @@
         {% endif %}
 
 
-
+        
 
         </div>
+
+
+
+
     </body>
 </html>
