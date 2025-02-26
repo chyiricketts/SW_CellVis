@@ -1,0 +1,50 @@
+* {
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+html {
+    background-color: beige;
+}
+
+.title-container {
+    text-align: center;
+}
+
+.main-title {
+    padding: 20px;
+}
+
+#info {
+    padding: 10px;
+    text-align: center;
+    font-size: 20px;
+}
+
+#title2 {
+    background-color: lavender;
+    text-align: center;
+    padding: 15px;
+}
+
+#upload {
+    font-size: 25px;
+    padding: 10px;
+    text-align: center;
+}
+
+button {
+    background-color: lavender; 
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px; /* Rounded corners */
+    transition: background-color 0.3s ease;
+}
+
+/* Button on hover */
+button:hover {
+    background-color: rgb(217, 217, 253);
+}

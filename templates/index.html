@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Data Vizualization</title>
+        <meta charset="utf-8"/>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+        <link rel="stylesheet" href="../static/css/uploads_style.css"> 
+        
+        
+    </head>
+
+    <body>
+        <div class = "title-container">
+            <div class = "main-title">
+                <h1>Cell Data Visualization</h1>
+            </div>
+
+            <div>
+                <h2>Uploads Page</h2>
+            </div>
+        </div>
+
+        <div id = "info">
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto omnis deleniti exercitationem aperiam incidunt mollitia laboriosam maxime inventore repudiandae eum non eos, optio, excepturi quo praesentium harum quibusdam nesciunt nemo!</p>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Optio amet earum voluptatum nobis voluptas itaque, tenetur aliquid! Debitis consequatur, consequuntur earum aut hic tenetur facilis velit, tempora dicta et fugit?</p>
+        </div>
+
+        <br><br><br><br>
+
+        <div class = "title-container">
+            <h2>Get Started!</h2>
+        </div>
+
+        <div id = "upload">
+            <form action="/upload" method="post" enctype="multipart/form-data">
+                <label for="npyfile">Choose NPY File</label>
+                <input type="file" name="npyfile" id="npyfile" accept=".npy">
+                <label for="bmpfile">Choose BMP File</label>
+                <input type="file" name="bmpfile" id="bmpfile" accept=".bmp">
+                <br><br>
+                <button type="submit">Upload</button>
+            </form>    
+        </div>
+
+        <br><br><br>
+
+        <div class = 'title-container'>
+            <h2>Updates</h2>
+
+        {% if error %}
+            <p class = "error">{{ error }}</p>
+        {% endif %}
+
+        {% if success %}
+            <p class = "success">{{ success }}</p>
+        {% endif %}
+
+
+
+
+        </div>
+    </body>
+</html>

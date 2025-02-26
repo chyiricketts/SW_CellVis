@@ -1,0 +1,61 @@
+* {
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+html, body{
+    background-color: white;
+    height: 100%;
+    overflow: hidden;
+}
+
+.main-title {
+    text-align: center;
+    padding: 20px;
+}
+
+.container {
+    display: flex;
+    height: 100vh;
+}
+
+.left-space {
+    width: 25%;
+}
+
+.left-update {
+    background-color: white;
+    width: 20%;
+    padding: 20px;
+}
+
+.middle-space {
+    width: 10%;
+}
+
+.right-image {
+    background-color: white;
+    width: 30%;
+    padding: 20px;
+}
+
+.right-space {
+    width: 15%;
+}
+
+#update_button {
+    background-color: lavender; 
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px; /* Rounded corners */
+    transition: background-color 0.3s ease;
+
+}
+
+/* Button on hover */
+#update_button:hover {
+    background-color: rgb(217, 217, 253);
+}
