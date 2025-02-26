@@ -1,3 +1,5 @@
+import os
+import time
 from flask import Flask, render_template, request, jsonify
 import matplotlib
 matplotlib.use("Agg")  # Use a non-GUI backend before importing pyplot
@@ -11,7 +13,7 @@ app = Flask(__name__)
 
 def generate_image(title_text, color_mode, overlay_mask):
     """Generate an image with optional mask overlay"""
-    img_path = r"static\uploads\pro-siNC.bmp"
+    img_path = os.path.join("static", "uploads", "pro-siNC.bmp")
     img = Image.open(img_path)
     img = np.array(img)
 
@@ -21,8 +23,11 @@ def generate_image(title_text, color_mode, overlay_mask):
     fig, ax = plt.subplots()
     ax.imshow(img, cmap="gray" if color_mode == "Greyscale" else None)
 
+    print("check")
     if title_text:
         ax.set_title(title_text)
+        print(f"Title set: {title_text}")  # Debugging check
+
 
     # Overlay mask if enabled
     if overlay_mask:
@@ -32,30 +37,32 @@ def generate_image(title_text, color_mode, overlay_mask):
 
     ax.axis("off")
 
-    buf = io.BytesIO()
-    plt.savefig(buf, format="png", bbox_inches="tight")
+    save_path = os.path.join("static", "figures", "w_generated_image.png")
+    plt.savefig(save_path, format="png", bbox_inches="tight")
     plt.close(fig)
-    buf.seek(0)
     
-    img_base64 = base64.b64encode(buf.read()).decode("utf-8")
-    return img_base64
+    return img_path
 
 
 @app.route("/update_graph", methods=["POST"])
 def update_graph():
     data = request.json
+    print(f"Received data: {data}")  # Debugging check
     title_text = data.get("title_text", "")
     color_mode = data.get("color_mode", "Original")
     overlay_mask = data.get("overlay_mask", False)
-    
-    img_base64 = generate_image(title_text, color_mode, overlay_mask)
-    return jsonify({"image": f"data:image/png;base64,{img_base64}"})
+
+    save_path = os.path.join("static", "figures", "w_generated_image.png")
+
+    generate_image(title_text, color_mode, overlay_mask)
+    return jsonify({"img": f"{save_path}?t={int(time.time())}"})  # Add timestamp to prevent caching
 
 
 @app.route("/open_wholeimage")
 def open_wholeimage():
-    img_base64 = generate_image("", "Original", False)
-    return render_template("wholeimage.html", image_data=f"data:image/png;base64,{img_base64}")
+    generate_image("", "Original", False)  # Ensure image is generated
+    return render_template("wholeimage2.html", image_path="/static/figures/w_generated_image.png")
+
 
 
 

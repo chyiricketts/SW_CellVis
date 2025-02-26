@@ -46,7 +46,7 @@
             <div class = "right-image">
                 <h2>Generated Image:</h2>
                 <!--<img id="graph_image" src="" alt="Generated Image" style="border: 1px solid black; width: 300px;">!-->
-                <img id="graph_image" src="{{ image_data }}" alt="Generated Image" style="border: 1px solid black; width: 300px;">    
+                <img id="graph_image" src="{{ image_path }}" alt="Generated Image">
             </div>
 
             <div class = "right-space"></div>
@@ -57,9 +57,11 @@
         <script>
             $(document).ready(function() {
                 function updateGraph() {
-                    let titleText = $("#title_text").text(); 
+                    let titleText = $("#title_text").val();
                     let colorMode = $("#color_mode").val();
                     let overlayMask = $("#overlay_mask").is(":checked");
+
+                    console.log("Title input value:", titleText);  // Debugging check
     
                     $.ajax({
                         type: "POST",
@@ -67,7 +69,8 @@
                         contentType: "application/json",
                         data: JSON.stringify({title_text: titleText, color_mode: colorMode, overlay_mask: overlayMask }),
                         success: function(response) {
-                            $("#graph_image").attr("src", response.image);
+                            $("#graph_image").attr("src", response.img + "?t=" + new Date().getTime()); // Prevent caching
+
                         }
                     });
                 }
