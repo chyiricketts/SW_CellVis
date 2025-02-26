@@ -18,12 +18,12 @@
             <!--Left side with Update Image Parameters-->
             <div class = "left-update">
                 <h2>Update Image Parameters</h2>
-                <label for="crop_size">Crop Size:</label>
-                <input type="range" id="crop_size" min="100" max="500" value="200">
-                <span id="crop_size_value">200</span>
+            
+                <label for="title_text">Title:</label>
+                <input type="text" id="title_text" placeholder="Enter title">
 
                 <br>
-            
+
                 <label for="color_mode">Color Mode:</label>
                 <select id="color_mode">
                     <option value="Original">Original</option>
@@ -57,7 +57,7 @@
         <script>
             $(document).ready(function() {
                 function updateGraph() {
-                    let cropSize = $("#crop_size").val();
+                    let titleText = $("#title_text").text(); 
                     let colorMode = $("#color_mode").val();
                     let overlayMask = $("#overlay_mask").is(":checked");
     
@@ -65,7 +65,7 @@
                         type: "POST",
                         url: "/update_graph",
                         contentType: "application/json",
-                        data: JSON.stringify({ crop_size: cropSize, color_mode: colorMode, overlay_mask: overlayMask }),
+                        data: JSON.stringify({title_text: titleText, color_mode: colorMode, overlay_mask: overlayMask }),
                         success: function(response) {
                             $("#graph_image").attr("src", response.image);
                         }
@@ -73,9 +73,6 @@
                 }
     
                 $("#update_button").click(updateGraph);
-                $("#crop_size").on("input", function() {
-                    $("#crop_size_value").text($(this).val());
-                });
             });
         </script>
     

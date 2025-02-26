@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flask + AJAX Mask Overlay</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="../static/css/wholeimage.css"> 
+</head>
+<body>
+    <body>
+        <h1 class = "main-title">Single Cell Visualization</h1>
+    
+        <div class = "container">
+
+            <div class = "left-space"></div>
+
+            <!--Left side with Update Image Parameters-->
+            <div class = "left-update">
+                <h2>Update Image Parameters</h2>
+            
+                <label for="title_text">Title:</label>
+                <input type="text" id="title_text" placeholder="Enter title">
+
+                <br>
+
+                <label for="color_mode">Color Mode:</label>
+                <select id="color_mode">
+                    <option value="Original">Original</option>
+                    <option value="Greyscale">Greyscale</option>
+                </select>
+
+                <br>
+            
+                <label for="overlay_mask">Overlay Mask:</label>
+                <input type="checkbox" id="overlay_mask">
+
+                <br>
+            
+                <button id="update_button">Update Graph</button>    
+            </div>
+
+            <div class = "middle-space"></div>
+        
+            <!--Right Side with Generated Image-->
+            <div class = "right-image">
+                <h2>Generated Image:</h2>
+                <!--<img id="graph_image" src="" alt="Generated Image" style="border: 1px solid black; width: 300px;">!-->
+                <img id="graph_image" src="static/figures/w_generated_image.png" alt="Generated Image" style="border: 1px solid black; width: 300px;">    
+            </div>
+
+            <div class = "right-space"></div>
+
+        </div>
+    
+        <!--Script-->
+        <script>
+            $(document).ready(function() {
+                function updateGraph() {
+                    let titleText = $("#title_text").text(); 
+                    let colorMode = $("#color_mode").val();
+                    let overlayMask = $("#overlay_mask").is(":checked");
+    
+                    $.ajax({
+                        type: "POST",
+                        url: "/update_graph",
+                        contentType: "application/json",
+                        data: JSON.stringify({title_text: titleText, color_mode: colorMode, overlay_mask: overlayMask }),
+                        success: function(response) {
+                            $("#graph_image").attr("src", response.image + "?t=" + new Date().getTime()); // Prevent caching
+
+                        }
+                    });
+                }
+    
+                $("#update_button").click(updateGraph);
+            });
+        </script>
+    
+</body>
+</html>
