@@ -67,6 +67,10 @@ def open_wholeimage():
     generate_image("", "Original", False, False)  # Ensure image is generated
     return render_template("wholeimage.html", image_path="/static/figures/w_generated_image.png")
 
+@app.route("/open_multiimage")
+def open_multiimage():
+    generate_image("", "Original", False, False)  # Ensure image is generated
+    return render_template("multiimage.html", image_path="/static/figures/w_generated_image.png")
 
 
 
