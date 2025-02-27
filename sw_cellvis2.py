@@ -11,7 +11,7 @@ from PIL import Image
 
 app = Flask(__name__)
 
-def generate_image(title_text, color_mode, overlay_mask):
+def generate_image(title_text, color_mode, overlay_mask, axis_toggle):
     """Generate an image with optional mask overlay"""
     img_path = os.path.join("static", "uploads", "pro-siNC.bmp")
     img = Image.open(img_path)
@@ -35,7 +35,10 @@ def generate_image(title_text, color_mode, overlay_mask):
         mask[50//4:3*50//4, 50//4:3*50//4] = 1  # Example square mask
         ax.imshow(mask, cmap="Reds", alpha=0.5)  # Red semi-transparent overlay
 
-    ax.axis("off")
+    if axis_toggle: 
+        ax.axis("on")
+    else:
+        ax.axis("off")
 
     save_path = os.path.join("static", "figures", "w_generated_image.png")
     plt.savefig(save_path, format="png", bbox_inches="tight")
@@ -51,16 +54,17 @@ def update_graph():
     title_text = data.get("title_text", "")
     color_mode = data.get("color_mode", "Original")
     overlay_mask = data.get("overlay_mask", False)
+    axis_toggle = data.get("axis_toggle", False)
 
     save_path = os.path.join("static", "figures", "w_generated_image.png")
 
-    generate_image(title_text, color_mode, overlay_mask)
+    generate_image(title_text, color_mode, overlay_mask, axis_toggle)
     return jsonify({"img": f"{save_path}?t={int(time.time())}"})  # Add timestamp to prevent caching
 
 
 @app.route("/open_wholeimage")
 def open_wholeimage():
-    generate_image("", "Original", False)  # Ensure image is generated
+    generate_image("", "Original", False, False)  # Ensure image is generated
     return render_template("wholeimage2.html", image_path="/static/figures/w_generated_image.png")
 
 

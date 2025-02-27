@@ -31,6 +31,11 @@
                 </select>
 
                 <br>
+
+                <label for="axis_toggle">Axis Toggle:</label>
+                <input type="checkbox" id="axis_toggle">
+
+                <br>
             
                 <label for="overlay_mask">Overlay Mask:</label>
                 <input type="checkbox" id="overlay_mask">
@@ -60,6 +65,7 @@
                     let titleText = $("#title_text").val();
                     let colorMode = $("#color_mode").val();
                     let overlayMask = $("#overlay_mask").is(":checked");
+                    let axisToggle = $("#axis_toggle").is(":checked");
 
                     console.log("Title input value:", titleText);  // Debugging check
     
@@ -67,7 +73,12 @@
                         type: "POST",
                         url: "/update_graph",
                         contentType: "application/json",
-                        data: JSON.stringify({title_text: titleText, color_mode: colorMode, overlay_mask: overlayMask }),
+                        data: JSON.stringify({
+                            title_text: titleText, 
+                            color_mode: colorMode, 
+                            overlay_mask: overlayMask,
+                            axis_toggle: axisToggle
+                        }),
                         success: function(response) {
                             $("#graph_image").attr("src", response.img + "?t=" + new Date().getTime()); // Prevent caching
 
