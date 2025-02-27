@@ -7,54 +7,78 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="../static/css/wholeimage.css"> 
 </head>
+
 <body>
-    <body>
-        <h1 class = "main-title">Single Cell Visualization</h1>
+    <div class="main-title-container">
+        <div class="return-button-container">
+            <form action="{{ url_for('index') }}" method="get">
+                <button type="submit" class="return-button">← Home</button>
+            </form>
+        </div>
+        <div class = "main-title-inner-container">
+            <h1 class="main-title">Single Image Visualization</h1>
+        </div>
+    </div>
     
         <div class = "container">
-
-            <div class = "left-space"></div>
+            <div class = "spacer"></div>
 
             <!--Left side with Update Image Parameters-->
-            <div class = "left-update">
-                <h2>Update Image Parameters</h2>
-            
-                <label for="title_text">Title:</label>
-                <input type="text" id="title_text" placeholder="Enter title">
+            <div class = "components">
 
-                <br>
+                <div class = "left-update">
+                    <h2>Update Image Parameters</h2>
+                
+                    <div class = "title_text_container">
+                        <label for="title_text">Title:</label>
+                        <input type="text" id="title_text" placeholder="Enter title">
+                    </div>
 
-                <label for="color_mode">Color Mode:</label>
-                <select id="color_mode">
-                    <option value="Original">Original</option>
-                    <option value="Greyscale">Greyscale</option>
-                </select>
+                    <br>
 
-                <br>
+                    <label for="color_mode">Color Mode:</label>
+                    <select id="color_mode">
+                        <option value="Original">Original</option>
+                        <option value="Greyscale">Greyscale</option>
+                    </select>
 
-                <label for="axis_toggle">Axis Toggle:</label>
-                <input type="checkbox" id="axis_toggle">
+                    <br>
 
-                <br>
-            
-                <label for="overlay_mask">Overlay Mask:</label>
-                <input type="checkbox" id="overlay_mask">
+                    <label for="axis_toggle">Axis Toggle:</label>
+                    <input type="checkbox" id="axis_toggle">
 
-                <br>
-            
-                <button id="update_button">Update Graph</button>    
+                    <br>
+                
+                    <label for="overlay_mask">Overlay Mask:</label>
+                    <input type="checkbox" id="overlay_mask">
+
+                    <br>
+                
+                    <button id="update_button">Update Graph</button>    
+                </div>
             </div>
 
-            <div class = "middle-space"></div>
+            <div class = "spacer"></div>
         
             <!--Right Side with Generated Image-->
-            <div class = "right-image">
-                <h2>Generated Image:</h2>
-                <!--<img id="graph_image" src="" alt="Generated Image" style="border: 1px solid black; width: 300px;">!-->
-                <img id="graph_image" src="{{ image_path }}" alt="Generated Image">
+            <div class = "components">
+                <div class = "middle-image">
+                    <h2>Generated Image:</h2>
+                    <!--<img id="graph_image" src="" alt="Generated Image" style="border: 1px solid black; width: 300px;">!-->
+                    <img id="graph_image" src="{{ image_path }}" alt="Generated Image">
+                </div>
             </div>
 
-            <div class = "right-space"></div>
+            <div class = "spacer"></div>
+
+            <div class = "components">
+                <div class = "right-data">
+                    <h2>Splitting Data</h2>
+                    <p>words</p>
+                </div>
+            </div>
+
+            <div class = "spacer"></div>
 
         </div>
     
@@ -66,8 +90,6 @@
                     let colorMode = $("#color_mode").val();
                     let overlayMask = $("#overlay_mask").is(":checked");
                     let axisToggle = $("#axis_toggle").is(":checked");
-
-                    console.log("Title input value:", titleText);  // Debugging check
     
                     $.ajax({
                         type: "POST",
@@ -79,6 +101,7 @@
                             overlay_mask: overlayMask,
                             axis_toggle: axisToggle
                         }),
+                        
                         success: function(response) {
                             $("#graph_image").attr("src", response.img + "?t=" + new Date().getTime()); // Prevent caching
 
@@ -90,5 +113,12 @@
             });
         </script>
     
-</body>
+    </body>
+
+    <footer>
+        <p>jlksfdjk;a</p>
+        <p>jlksfdjk;a</p>
+        <p>jlksfdjk;a</p>
+        <p>Chyi Ricketts</p>
+    </footer>
 </html>
