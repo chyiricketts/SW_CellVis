@@ -32,6 +32,8 @@ html {
     font-size: 62.5%;
     overflow-y: scroll;
     background: var(--greyLight-1);
+    overflow-x: hidden;
+    width: 100%;
   
     @media screen and (min-width: 900px) {
       font-size: 75%;

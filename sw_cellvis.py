@@ -72,6 +72,9 @@ def open_multiimage():
     generate_image("", "Original", False, False)  # Ensure image is generated
     return render_template("multiimage.html", image_path="/static/figures/w_generated_image.png")
 
+@app.route("/open_blip")
+def open_blip():
+    return render_template("blip.html")
 
 
 @app.route("/")

@@ -143,16 +143,33 @@ img {
     
 }
   
-.components {
+
+.big-component {
+    flex: 1 1 100rem; /* Grow and shrink with a base size of 30rem */
+    width: min(90%, 100rem); /* Ensures it doesn't get too big */
+    max-width: 1000px;
+    min-height: 20rem;
+    border-radius: 3rem;
+    box-shadow:.8rem .8rem 1.4rem var(--greyLight-2), 
+              -.2rem -.2rem 1.8rem var(--white);
+    padding: 4rem;
+    align-items: center;
+}
+
+.small-component {
     flex: 1 1 30rem; /* Grow and shrink with a base size of 30rem */
     width: min(90%, 30rem); /* Ensures it doesn't get too big */
-    max-width: 320px;
+    max-width: 500px;
     min-height: 40rem;
     border-radius: 3rem;
     box-shadow:.8rem .8rem 1.4rem var(--greyLight-2), 
               -.2rem -.2rem 1.8rem var(--white);
     padding: 4rem;
     align-items: center;
+}
+
+.big-component p {
+    font-size: 20px;
 }
 
 .container h2 {
