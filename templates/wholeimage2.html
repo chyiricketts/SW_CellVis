@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whole Image Visualization</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="../static/css/wholeimage2.css"> 
+</head>
+
+<body>
+    <div class="main-title-container">
+        <div class="return-button-container">
+            <form action="{{ url_for('index') }}" method="get">
+                <button type="submit" class="return-button">← Home</button>
+            </form>
+        </div>
+        <div class = "main-title-inner-container">
+            <h1 class="main-title">Segmentation Visualization</h1>
+        </div>
+    </div>
+    <br><br>
+    
+        <div class = "container">
+            <div class = "spacer"></div>
+
+            <!--Left side with Update Image Parameters-->
+            <div class = "components">
+
+                <div class = "left-update">
+                    <h2>Update Image Parameters</h2>
+                
+                    <div class = "title_text_container">
+                        <label for="title_text">Figure Title:</label>
+                        <input type="text" id="title_text" placeholder="Enter title">
+                    </div>
+
+                    <br>
+
+                    <label for="color_mode">Color Mode:</label>
+                    <select id="color_mode">
+                        <option value="Original">Original</option>
+                        <option value="Greyscale">Greyscale</option>
+                    </select>
+
+                    <br><br>
+
+                    <div class = "checkbox-container">
+                        <label for="axis_toggle">Axis Toggle:</label>
+                        <input type="checkbox" id="axis_toggle">
+                    </div>
+
+                    <br>
+                
+                    <div class = "checkbox-container">
+                        <label for="overlay_mask">Overlay Mask:</label>
+                        <input type="checkbox" id="overlay_mask">
+                    </div>
+
+                    <br>
+
+                    <div class = "checkbox-container">
+                        <label for="mask_border">Mask Borders:</label>
+                        <input type="checkbox" id="mask_border">
+                    </div>
+
+                    <br>
+
+                    <div class="slider-container">
+                        <label for="brightness_adjust">Overlay Opacity:</label>
+                        <input type="range" id="brightness_adjust" min="0" max="10" step="0.5" value="1">
+                    </div>
+
+                    <br><br><br>
+                
+                    <div class="center-button-container">
+                        <button id="update_button">Update Graph</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class = "spacer"></div>
+        
+            <!--Right Side with Generated Image-->
+            <div class = "components">
+                <div class = "middle-image">
+                    <h2>Generated Image:</h2>
+                    <!--<img id="graph_image" src="" alt="Generated Image" style="border: 1px solid black; width: 300px;">!-->
+                    <img id="graph_image" src="{{ image_path }}" alt="Generated Image">
+                </div>
+            </div>
+
+            <div class = "spacer"></div>
+
+            <div class = "components">
+                <div class = "right-data">
+                    <h2>Showing Data</h2>
+                    <p>This section will hopefully eventually contain options for data selection and be able to print the corresponding data</p>
+                    <br>
+                    <p>I also need to complete the ability to upload your own images</p>
+                </div>
+            </div>
+
+            <div class = "spacer"></div>
+
+        </div>
+    
+        <!--Script-->
+        <script>
+            $(document).ready(function() {
+                function updateGraph() {
+                    let titleText = $("#title_text").val();
+                    let colorMode = $("#color_mode").val();
+                    let overlayMask = $("#overlay_mask").is(":checked");
+                    let axisToggle = $("#axis_toggle").is(":checked");
+                    let maskBorder = $("#mask_border").is(":checked");
+                    let brightnessAdjust = $("#brightness_adjust").val();
+
+    
+                    $.ajax({
+                        type: "POST",
+                        url: "/update_graph",
+                        contentType: "application/json",
+                        data: JSON.stringify({
+                            title_text: titleText, 
+                            color_mode: colorMode, 
+                            overlay_mask: overlayMask,
+                            axis_toggle: axisToggle,
+                            mask_border: maskBorder,
+                            brightness_adjust: brightnessAdjust
+                        }),
+                        
+                        success: function(response) {
+                            $("#graph_image").attr("src", response.img + "?t=" + new Date().getTime()); // Prevent caching
+
+                        }
+                    });
+                }
+    
+                $("#update_button").click(updateGraph);
+            });
+        </script>
+    
+    </body>
+
+    <footer>
+        <h1></h1>
+        <div class = "icon-container">
+            <button onclick="window.open('https://github.com/chyiricketts', '_blank');">
+                <img src = "static\footerimg\github.svg" alt = "Github icon">
+            </button>
+            <button onclick="window.location.href='mailto:chyi.ricketts@gmail.com';">
+                <img src = "static\footerimg\mail.svg" alt = "Email icon">
+            </button>
+            <button onclick="window.open('https://www.facebook.com/chyi.ricketts', '_blank');">
+                <img src = "static\footerimg\facebook.svg" alt = "Facebook icon">
+            </button>
+            <button onclick="window.open('www.linkedin.com/in/chyi-ricketts', '_blank');">
+                <img src = "static\footerimg\linkedin.svg" alt = "Linkedin icon">
+            </button>
+        </div>
+        <p>Signature Work</p>
+        <p>@Chyi Ricketts</p>
+    </footer>
+</html>

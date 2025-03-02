@@ -16,7 +16,7 @@
             </form>
         </div>
         <div class = "main-title-inner-container">
-            <h1 class="main-title">Single Image Visualization</h1>
+            <h1 class="main-title">Segmentation Visualization</h1>
         </div>
     </div>
     <br><br>
@@ -31,7 +31,7 @@
                     <h2>Update Image Parameters</h2>
                 
                     <div class = "title_text_container">
-                        <label for="title_text">Title:</label>
+                        <label for="title_text">Figure Title:</label>
                         <input type="text" id="title_text" placeholder="Enter title">
                     </div>
 
@@ -43,19 +43,39 @@
                         <option value="Greyscale">Greyscale</option>
                     </select>
 
-                    <br>
+                    <br><br>
 
-                    <label for="axis_toggle">Axis Toggle:</label>
-                    <input type="checkbox" id="axis_toggle">
-
-                    <br>
-                
-                    <label for="overlay_mask">Overlay Mask:</label>
-                    <input type="checkbox" id="overlay_mask">
+                    <div class = "checkbox-container">
+                        <label for="axis_toggle">Axis Toggle:</label>
+                        <input type="checkbox" id="axis_toggle">
+                    </div>
 
                     <br>
                 
-                    <button id="update_button">Update Graph</button>    
+                    <div class = "checkbox-container">
+                        <label for="overlay_mask">Overlay Mask:</label>
+                        <input type="checkbox" id="overlay_mask">
+                    </div>
+
+                    <br>
+
+                    <div class = "checkbox-container">
+                        <label for="mask_border">Mask Borders:</label>
+                        <input type="checkbox" id="mask_border">
+                    </div>
+
+                    <br>
+
+                    <div class="slider-container">
+                        <label for="brightness_adjust">Overlay Opacity:</label>
+                        <input type="range" id="brightness_adjust" min="0" max="10" step="0.5" value="1">
+                    </div>
+
+                    <br><br><br>
+                
+                    <div class="center-button-container">
+                        <button id="update_button">Update Graph</button>
+                    </div>
                 </div>
             </div>
 
@@ -74,8 +94,10 @@
 
             <div class = "components">
                 <div class = "right-data">
-                    <h2>Splitting Data</h2>
-                    <p>words</p>
+                    <h2>Showing Data</h2>
+                    <p>This section will hopefully eventually contain options for data selection and be able to print the corresponding data</p>
+                    <br>
+                    <p>I also need to complete the ability to upload your own images</p>
                 </div>
             </div>
 
@@ -91,6 +113,9 @@
                     let colorMode = $("#color_mode").val();
                     let overlayMask = $("#overlay_mask").is(":checked");
                     let axisToggle = $("#axis_toggle").is(":checked");
+                    let maskBorder = $("#mask_border").is(":checked");
+                    let brightnessAdjust = $("#brightness_adjust").val();
+
     
                     $.ajax({
                         type: "POST",
@@ -100,7 +125,9 @@
                             title_text: titleText, 
                             color_mode: colorMode, 
                             overlay_mask: overlayMask,
-                            axis_toggle: axisToggle
+                            axis_toggle: axisToggle,
+                            mask_border: maskBorder,
+                            brightness_adjust: brightnessAdjust
                         }),
                         
                         success: function(response) {

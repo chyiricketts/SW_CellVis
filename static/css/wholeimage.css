@@ -109,21 +109,26 @@ img {
     margin: 0 auto;  /* Centers image */
 }
 
+.center-button-container {
+    display: flex;
+    justify-content: center;  /* Centers the button horizontally */
+    align-items: center;  /* Optionally center vertically */
+}
 
 #update_button {
-    background-color: lavender; 
+    background: var(--greyLight-2);
     border: none;
     padding: 10px 20px;
     font-size: 16px;
     cursor: pointer;
-    border-radius: 5px; /* Rounded corners */
+    border-radius: 10px; /* Rounded corners */
     transition: background-color 0.3s ease;
 
 }
 
 /* Button on hover */
 #update_button:hover {
-    background-color: rgb(217, 217, 253);
+    background-color: var(--greyLight-3);
 }
 
   
@@ -190,6 +195,94 @@ img {
     outline: none;
     box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
 }
+
+#color_mode {
+    width: 15rem;
+    height: 3rem;
+    border: none;
+    border-radius: 1rem;
+    font-size: 1.4rem;
+    padding-left: 1.4rem;
+    box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.2);
+    background-color: transparent;
+    font-family: inherit;
+    color: #333;
+    appearance: none; /* Hides default dropdown styling */
+    cursor: pointer;
+}
+
+/* Style the dropdown when focused */
+#color_mode:focus {
+    outline: none;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Dropdown arrow customization */
+#color_mode::-ms-expand {
+    display: none; /* Hide default arrow in IE */
+}
+
+#color_mode option {
+    background: white;
+    color: #333;
+    font-size: 1.4rem;
+}
+
+/* Ensure container aligns with the input */
+#color_mode_container {
+    grid-column: 3 / 4;
+    grid-row: 4 / 5; /* Adjust as needed */
+}
+
+
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: inherit;
+    color: #333;
+}
+
+.checkbox-container input[type="checkbox"] {
+    appearance: none;
+    width: 1.5rem;
+    height: 1.5rem;
+    border: 2px solid #aaa;
+    border-radius: 0.4rem;
+    background-color: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.checkbox-container input[type="checkbox"]:checked {
+    background-color: #3e7ddb;
+    border-color: #3e7ddb;
+}
+
+/* Adding a checkmark */
+.checkbox-container input[type="checkbox"]::before {
+    content: "✔";
+    font-size: 1rem;
+    color: white;
+    display: none;
+}
+
+.checkbox-container input[type="checkbox"]:checked::before {
+    display: block;
+}
+
+/* Hover effect */
+.checkbox-container input[type="checkbox"]:hover {
+    border-color: #888;
+}
+
+.right-data p {
+    font-size: 20px;
+}
+
 
 footer {
     width: 100%;
