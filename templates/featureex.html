@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Whole Image Visualization</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link rel="stylesheet" href="../static/css/wholeimage.css"> 
+    <link rel="stylesheet" href="../static/css/featureex.css"> 
 </head>
 
 <body>
@@ -22,17 +22,95 @@
     <br><br>
     
         <div class = "container">
+
+            <div class = "big-component">
+                <p>This page is a feature extraction tool for analyzing post-segmentation Cellpose files. 
+                    Using an image file (e.g. png, tiff) and a corresponding .npy file, 
+                    it is able to present a user-friendly view of the image data without the use of coding skills. 
+                    JavaScript allows seamless response to update the image, graphed with MatPlotLib. </p>
+                <br>
+                <p>Just use the demonstration on the right to toggle your preferences and see the updates!</p>
+            </div>
+
             <div class = "spacer"></div>
 
             <div class = "components">
-                <div class = "right-data">
-                    <h2>Showing Data</h2>
-                    <p>This page is a feature extraction tool for analyzing post-segmentation Cellpose files. 
-                        Using an image file (e.g. png, tiff) and a corresponding .npy file, 
-                        it is able to present a user-friendly view of the image data without the use of coding skills. 
-                        JavaScript allows seamless response to update the image, graphed with MatPlotLib. </p>
+                <div class = "left-update">
+                    <h2>Feature Extraction Tools</h2>
+
+                    <h3>Sample Image Selection</h3>
+
                     <br>
-                    <p>Just use the demonstration on the right to toggle your preferences and see the updates!</p>
+
+                    <div class="checkbox-container">
+                        <input type="checkbox" id="image_choice1" class = "exclusive-checkbox" checked>
+                        <label for="image_choice">First Sample Image</label>
+                    </div>
+
+                    <br>
+
+                    <div class="checkbox-container">
+                        <input type="checkbox" id="image_choice2" class = "exclusive-checkbox">
+                        <label for="image_choice">Second Sample Image</label>
+
+                    </div>
+
+                    <br>
+
+                    <div class="checkbox-container">
+                        <input type="checkbox" id="image_choice3" class = "exclusive-checkbox">
+                        <label for="image_choice">Third Sample Image: </label>
+                    </div>
+
+                    <br><br>
+
+                    <h3>Detail Selection</h3>
+
+                    <br>
+
+                    <div class = "checkbox-container">
+                        <input type="checkbox" id="show_average" checked>
+                        <label for="show_average">Show Average</label>
+                    </div>
+
+                    <br>
+
+                    <div class = "checkbox-container">
+                        <input type="checkbox" id="show_individual">
+                        <label for="show_individual">Show Individual</label>
+                    </div>
+
+                    <br><br>
+
+                    <h3>Features</h3>
+
+                    <br>
+
+                    <div class = "checkbox-container">
+                        <input type="checkbox" id="show_sizes">
+                        <label for="show_sizes">Cell Sizes (in Pixels)</label>
+                    </div>
+
+                    <br>
+
+                    <div class = "checkbox-container">
+                        <input type="checkbox" id="show_cellcenters">
+                        <label for="show_cellcenters">Cell Centers</label>
+                    </div>
+
+                    <br>
+
+                    <div class = "checkbox-container">
+                        <input type="checkbox" id="show_intensity">
+                        <label for="show_intensity">Intensity</label>
+                    </div>
+
+                    <br><br>
+
+                    <div class="center-button-container">
+                        <button class = "update_button" id="show_data">Show Data</button>
+                    </div>
+
                 </div>
             </div>
 
@@ -43,7 +121,8 @@
                 <div class = "middle-image">
                     <h2>Image Reference:</h2>
                     <!--<img id="graph_image" src="" alt="Generated Image" style="border: 1px solid black; width: 300px;">!-->
-                    <img id="graph_image" src="static/uploads/pro-siNC.bmp" alt="Generated Image">
+                    <img id="graph_image" src="static/uploads/D04F24Composite.bmp" alt="Generated Image">
+
                 </div>
             </div>
 
@@ -51,56 +130,10 @@
 
             <!--Left side with Update Image Parameters-->
             <div class = "components">
-
-                <div class = "left-update">
-                    <h2>Feature Extraction Tools are under contruction</h2>
-                    <h2>Will be completed shortly</h2>
-                
-                    <div class = "title_text_container">
-                        <label for="title_text">Figure Title:</label>
-                        <input type="text" id="title_text" placeholder="Enter title">
-                    </div>
-
-                    <br>
-
-                    <label for="color_mode">Color Mode:</label>
-                    <select id="color_mode">
-                        <option value="Original">Original</option>
-                        <option value="Greyscale">Greyscale</option>
-                    </select>
-
-                    <br><br>
-
-                    <div class = "checkbox-container">
-                        <label for="axis_toggle">Axis Toggle:</label>
-                        <input type="checkbox" id="axis_toggle">
-                    </div>
-
-                    <br>
-                
-                    <div class = "checkbox-container">
-                        <label for="overlay_mask">Overlay Mask:</label>
-                        <input type="checkbox" id="overlay_mask">
-                    </div>
-
-                    <br>
-
-                    <div class = "checkbox-container">
-                        <label for="mask_border">Mask Borders:</label>
-                        <input type="checkbox" id="mask_border">
-                    </div>
-
-                    <br>
-
-                    <div class="slider-container">
-                        <label for="brightness_adjust">Overlay Opacity:</label>
-                        <input type="range" id="brightness_adjust" min="0" max="10" step="0.5" value="1">
-                    </div>
-
-                    <br><br><br>
-                
-                    <div class="center-button-container">
-                        <button id="update_button">Update Graph</button>
+                <div class = "right-data">
+                    <h2>Feature Data</h2>
+                    <div id="output">
+                        <p>Feature Data will appear here!</p>
                     </div>
                 </div>
             </div>
@@ -110,37 +143,57 @@
         <!--Script-->
         <script>
             $(document).ready(function() {
-                function updateGraph() {
-                    let titleText = $("#title_text").val();
-                    let colorMode = $("#color_mode").val();
-                    let overlayMask = $("#overlay_mask").is(":checked");
-                    let axisToggle = $("#axis_toggle").is(":checked");
-                    let maskBorder = $("#mask_border").is(":checked");
-                    let brightnessAdjust = $("#brightness_adjust").val();
+                function showData() {
+                    let imageChoice1 = $("#image_choice1").is(":checked");
+                    let imageChoice2 = $("#image_choice2").is(":checked");
+                    let imageChoice3 = $("#image_choice3").is(":checked");
+                    let showAverage = $("#show_average").is(":checked");
+                    let showIndividual = $("#show_individual").is(":checked");
+                    let showSizes = $("#show_sizes").is(":checked");
+                    let showCellcenters = $("#show_cellcenters").is(":checked");
+                    let showIntensity = $("#show_intensity").is(":checked");
 
     
                     $.ajax({
                         type: "POST",
-                        url: "/update_graph",
+                        url: "/show_data",
                         contentType: "application/json",
                         data: JSON.stringify({
-                            title_text: titleText, 
-                            color_mode: colorMode, 
-                            overlay_mask: overlayMask,
-                            axis_toggle: axisToggle,
-                            mask_border: maskBorder,
-                            brightness_adjust: brightnessAdjust
+                            image_choice1: imageChoice1,
+                            image_choice2: imageChoice2,
+                            image_choice3: imageChoice3,
+                            show_average: showAverage,
+                            show_individual: showIndividual,
+                            show_sizes: showSizes,
+                            show_cellcenters: showCellcenters,
+                            show_intensity: showIntensity
                         }),
                         
                         success: function(response) {
+                            $("#output").html(response.text); // Insert the paragraph
                             $("#graph_image").attr("src", response.img + "?t=" + new Date().getTime()); // Prevent caching
 
                         }
                     });
                 }
     
-                $("#update_button").click(updateGraph);
+                $("#show_data").click(showData);
             });
+
+
+            document.querySelectorAll('.exclusive-checkbox').forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    if (this.checked) {
+                        document.querySelectorAll('.exclusive-checkbox').forEach(other => {
+                            if (other !== this) {
+                                other.checked = false;
+                            }
+                        });
+                    }
+                });
+            });
+
+
         </script>
     
     </body>

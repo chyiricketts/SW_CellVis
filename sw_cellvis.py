@@ -10,22 +10,12 @@ import base64
 from PIL import Image
 from skimage import measure
 from PIL import ImageEnhance
+from scipy.spatial.distance import pdist
 
 
 app = Flask(__name__)
 
-def generate_image(title_text, color_mode, overlay_mask, axis_toggle, mask_border, brightness_adjust, overlay_adjust, border_linewidth, mask_labels, image_choice1, image_choice2, image_choice3):
-    """Generate an image with optional mask overlay"""
-    print("imagechoice: ")
-    print(image_choice1, image_choice2, image_choice3)
-
-    if image_choice1 == True:
-        image_choice = 0
-    elif image_choice2 == True:
-        image_choice = 1
-    elif image_choice3 == True:
-        image_choice = 2
-
+def choose_image(image_choice1, image_choice2, image_choice3):
     img_paths = [os.path.join("static", "uploads", "D04F24Composite.bmp"),
                  os.path.join("static", "uploads", "E10F5Composite.bmp"),
                  os.path.join("static", "uploads", "F09F38Composite.bmp")]
@@ -33,9 +23,24 @@ def generate_image(title_text, color_mode, overlay_mask, axis_toggle, mask_borde
     npy_paths = [os.path.join("static", "uploads", "D04F24Composite_seg.npy"),
                  os.path.join("static", "uploads", "E10F5Composite_seg.npy"),
                  os.path.join("static", "uploads", "F09F38Composite_seg.npy")]
+    
+    if image_choice1 == True:
+        image_choice = 0
+    elif image_choice2 == True:
+        image_choice = 1
+    elif image_choice3 == True:
+        image_choice = 2
+    else:
+        image_choice = 0
 
-    img_path = img_paths[image_choice]
-    npy_file = npy_paths[image_choice]
+    return (img_paths[image_choice], npy_paths[image_choice])
+
+
+
+def generate_image(title_text, color_mode, overlay_mask, axis_toggle, mask_border, brightness_adjust, overlay_adjust, border_linewidth, mask_labels, image_choice1, image_choice2, image_choice3):
+    """Generate an image with optional mask overlay"""
+
+    img_path, npy_file = choose_image(image_choice1, image_choice2, image_choice3)
 
     img = Image.open(img_path)
     img = np.array(img)
@@ -106,6 +111,92 @@ def generate_image(title_text, color_mode, overlay_mask, axis_toggle, mask_borde
     return img_path
 
 
+
+def compile_feature_data(image_choice1, image_choice2, image_choice3, show_average, show_individual, show_sizes, show_cellcenters, show_intensity):
+    
+    output = ""
+
+    img_path, npy_file = choose_image(image_choice1, image_choice2, image_choice3)
+
+    img = Image.open(img_path)
+    img = np.array(img)
+
+    mask_data = np.load(npy_file, allow_pickle=True).item()
+    masks = mask_data['masks']
+    masks_cells = np.ma.masked_where(masks == 0, masks)
+    cell_labels = np.unique(masks)
+    cell_labels = cell_labels[cell_labels > 0]  # remove background (0)
+
+    # Total Pixels
+    unique_labels, counts = np.unique(masks, return_counts=True)
+    pixel_counts = {label: count for label, count in zip(unique_labels, counts) if label != 0}
+    mean_pixel_counts = np.mean(list(pixel_counts.values()))
+    mean_pixel_counts = round(mean_pixel_counts, 4)
+
+    # Cell Centers
+    cell_centers = {}
+    for label in cell_labels:
+        cell_coords = np.column_stack(np.where(masks == label))  # (row, col) positions
+        r_min, c_min = cell_coords.min(axis=0)
+        r_max, c_max = cell_coords.max(axis=0)
+        center_r, center_c = int((r_min + r_max) // 2), int((c_min + c_max) // 2)  # Convert to int
+        cell_centers[label] = (center_r, center_c)
+    mean_x = np.mean([center[0] for center in cell_centers.values()])
+    mean_y = np.mean([center[1] for center in cell_centers.values()])
+    mean_x = round(mean_x, 4)
+    mean_y = round(mean_y, 4)
+
+    # Mean Intensity
+    cell_intensities = {}
+    for label in unique_labels:
+        cell_pixels = img[masks == label]
+        mean_intensity = np.mean(cell_pixels)
+        cell_intensities[label] = round(mean_intensity, 4)
+    mean_cell_intensity = np.mean(list(cell_intensities.values()))
+    mean_cell_intensity = round(mean_cell_intensity, 4)
+
+
+    print("Diameters")
+    print(cell_centers)
+    print(cell_intensities)
+    print(pixel_counts)
+    print("---------------------")
+
+    if show_sizes: 
+        output += ("<b>Cell Sizes </b><br>")
+        if show_average:
+            output += (f"<b>Average: </b> {mean_pixel_counts}<br>")
+        if show_individual:
+            for mask in cell_labels:
+                output += (f"Mask {mask}: {pixel_counts[mask]}<br>")
+            output += ("<br>")
+    
+    if show_cellcenters:
+        output += ("<b>Cell Centers </b><br>")
+        if show_average:
+            output += (f"<b>Average: </b> ({float(mean_x), float(mean_y)})<br>")
+        if show_individual:
+            for mask in cell_labels:
+                output += (f"Mask {mask}: {cell_centers[mask]}<br>")
+            output += ("<br>")
+    
+    print(f"show intensity: {show_intensity}")
+    if show_intensity: 
+        output += ("<b>Intensities </b><br>")
+        if show_average:
+            output += (f"<b>Average: </b> {mean_cell_intensity}<br>")
+        if show_individual:
+            for mask in cell_labels:
+                output += (f"Mask {mask}: {cell_intensities[mask]}<br>")
+            output += ("<br>")
+
+
+    if output == "":
+        output += ("Hello there! It seems that no data has appeared :(<br>Try selecting one of the features!")
+
+    return output
+
+
 @app.route("/update_graph", methods=["POST"])
 def update_graph():
     data = request.json
@@ -128,6 +219,32 @@ def update_graph():
     generate_image(title_text, color_mode, overlay_mask, axis_toggle, mask_border, brightness_adjust, overlay_adjust, border_linewidth, mask_labels, image_choice1, image_choice2, image_choice3)
     return jsonify({"img": f"{save_path}?t={int(time.time())}"})  # Add timestamp to prevent caching
 
+@app.route("/show_data", methods=["POST"])
+def show_data():
+    data = request.json
+    print(f"Received data: {data}")  # Debugging check
+
+    img_path, npy_path = choose_image(
+    data.get("image_choice1", False), 
+    data.get("image_choice2", False), 
+    data.get("image_choice3", False))
+
+    image_choice1 = data.get("image_choice1", True)
+    image_choice2 = data.get("image_choice2", False)
+    image_choice3 = data.get("image_choice3", False)
+    show_average = data.get("show_average", True)
+    show_individual = data.get("show_individual", False)
+    show_sizes = data.get("show_sizes", False)
+    show_cellcenters = data.get("show_cellcenters", False)
+    show_intensity = data.get("show_intensity", False)
+
+    paragraph = compile_feature_data(image_choice1, image_choice2, image_choice3, show_average, show_individual, show_sizes, show_cellcenters, show_intensity)
+    return jsonify({
+        "img": img_path,
+        "text": f"<p>{paragraph}</p>"
+    })
+
+
 
 @app.route("/open_wholeimage")
 def open_wholeimage():
@@ -136,6 +253,7 @@ def open_wholeimage():
 
 @app.route("/open_featureex")
 def open_featureex():
+    compile_feature_data(True, False, False, True, False, False, False, False)
     return render_template("featureex.html")
 
 @app.route("/open_blip")
