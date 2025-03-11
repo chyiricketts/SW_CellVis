@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Whole Image Visualization</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link rel="stylesheet" href="../static/css/wholeimage2.css"> 
+    <link rel="stylesheet" href="../static/css/wholeimage.css"> 
 </head>
 
 <body>
@@ -22,6 +22,31 @@
     <br><br>
     
         <div class = "container">
+
+            <div class = "components">
+                <div class = "right-data">
+                    <h2>Segmentation Visualizer</h2>
+                    <p>This page is a visualizer tool for analyzing post-segmentation Cellpose files. 
+                        Using an image file (e.g. png, tiff) and a corresponding .npy file, 
+                        it is able to present a user-friendly view of the image data without the use of coding skills. 
+                        JavaScript allows seamless response to update the image, graphed with MatPlotLib. </p>
+                    <br>
+                    <p>Just use the demonstration on the right to toggle your preferences and see the updates!</p>
+                </div>
+            </div>
+
+            <div class = "spacer"></div>
+
+            <div class = "spacer"></div>
+        
+            <!--Right Side with Generated Image-->
+            <div class = "components">
+                <div class = "middle-image">
+                    <h2>Generated Image:</h2>
+                    <img id="graph_image" src="{{ image_path }}" alt="Generated Image">
+                </div>
+            </div>
+
             <div class = "spacer"></div>
 
             <!--Left side with Update Image Parameters-->
@@ -37,6 +62,13 @@
 
                     <br>
 
+                    <div class = "checkbox-container">
+                        <label for="axis_toggle">Axis Toggle:</label>
+                        <input type="checkbox" id="axis_toggle">
+                    </div>
+
+                    <br><br>
+
                     <label for="color_mode">Color Mode:</label>
                     <select id="color_mode">
                         <option value="Original">Original</option>
@@ -45,12 +77,12 @@
 
                     <br><br>
 
-                    <div class = "checkbox-container">
-                        <label for="axis_toggle">Axis Toggle:</label>
-                        <input type="checkbox" id="axis_toggle">
+                    <div class="slider-container">
+                        <label for="brightness_adjust">Image Opacity:</label>
+                        <input type="range" id="brightness_adjust" min="0" max="10" step="0.5" value="1">
                     </div>
 
-                    <br>
+                    <br><br>
                 
                     <div class = "checkbox-container">
                         <label for="overlay_mask">Overlay Mask:</label>
@@ -58,6 +90,13 @@
                     </div>
 
                     <br>
+
+                    <div class="slider-container">
+                        <label for="overlay_adjust">Overlay Opacity:</label>
+                        <input type="range" id="overlay_adjust" min="0" max="1" step="0.05" value="0.5">
+                    </div>
+
+                    <br><br>
 
                     <div class = "checkbox-container">
                         <label for="mask_border">Mask Borders:</label>
@@ -67,8 +106,15 @@
                     <br>
 
                     <div class="slider-container">
-                        <label for="brightness_adjust">Overlay Opacity:</label>
-                        <input type="range" id="brightness_adjust" min="0" max="10" step="0.5" value="1">
+                        <label for="border_linewidth">Border Linewidth:</label>
+                        <input type="range" id="border_linewidth" min="0.5" max="2" step="0.1" value="1">
+                    </div>
+
+                    <br><br>
+
+                    <div class = "checkbox-container">
+                        <label for="mask_labels">Mask Labels:</label>
+                        <input type="checkbox" id="mask_labels">
                     </div>
 
                     <br><br><br>
@@ -78,30 +124,6 @@
                     </div>
                 </div>
             </div>
-
-            <div class = "spacer"></div>
-        
-            <!--Right Side with Generated Image-->
-            <div class = "components">
-                <div class = "middle-image">
-                    <h2>Generated Image:</h2>
-                    <!--<img id="graph_image" src="" alt="Generated Image" style="border: 1px solid black; width: 300px;">!-->
-                    <img id="graph_image" src="{{ image_path }}" alt="Generated Image">
-                </div>
-            </div>
-
-            <div class = "spacer"></div>
-
-            <div class = "components">
-                <div class = "right-data">
-                    <h2>Showing Data</h2>
-                    <p>This section will hopefully eventually contain options for data selection and be able to print the corresponding data</p>
-                    <br>
-                    <p>I also need to complete the ability to upload your own images</p>
-                </div>
-            </div>
-
-            <div class = "spacer"></div>
 
         </div>
     
@@ -115,6 +137,9 @@
                     let axisToggle = $("#axis_toggle").is(":checked");
                     let maskBorder = $("#mask_border").is(":checked");
                     let brightnessAdjust = $("#brightness_adjust").val();
+                    let overlayAdjust = $("#overlay_adjust").val();
+                    let borderLinewidth = $("#border_linewidth").val();
+                    let maskLabels = $("#mask_labels").is(":checked");
 
     
                     $.ajax({
@@ -127,7 +152,10 @@
                             overlay_mask: overlayMask,
                             axis_toggle: axisToggle,
                             mask_border: maskBorder,
-                            brightness_adjust: brightnessAdjust
+                            brightness_adjust: brightnessAdjust,
+                            overlay_adjust: overlayAdjust,
+                            border_linewidth: borderLinewidth,
+                            mask_labels: maskLabels
                         }),
                         
                         success: function(response) {

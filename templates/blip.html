@@ -24,18 +24,62 @@
         <div class = "container">
 
             <div class = "big-component">
-                <p>Placeholder words</p>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nulla, tempore odit? Dolor eius, aliquid architecto repellendus voluptas, molestiae eveniet reprehenderit eaque molestias aut ratione cupiditate dolores, tenetur adipisci voluptatibus ea!</p>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nulla, tempore odit? Dolor eius, aliquid architecto repellendus voluptas, molestiae eveniet reprehenderit eaque molestias aut ratione cupiditate dolores, tenetur adipisci voluptatibus ea!</p>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nulla, tempore odit? Dolor eius, aliquid architecto repellendus voluptas, molestiae eveniet reprehenderit eaque molestias aut ratione cupiditate dolores, tenetur adipisci voluptatibus ea!</p>
+                <h2>Proposed DL-assisted Image Analysis Pipeline</h2>
+                <p>This study proposes a pipeline that efficiently exploits the specialties of
+                    several different deep learning algorithms to arrive at data that will be able to guide researchers to
+                    important features in their data. It's main steps include a cellular segmentation software, Cellpose, 
+                    an image captioning model, BLIP-2, and an LLM for pattern identification. </p><br>
+                <img src = static\sw_pdf\sw_pipeline_flowchart.png><br>
+                <p>When performing fine-tuned training in the BLIP-2 model, training
+                    data based on images segmented with the tried-and-true Cellpose were used and processed through
+                    the web GUI (Segmentation Visualizer) to contain accurate mask data. With this, BLIP-2 can easily pinpoint the exact
+                    location of ROIs and extract useful information on fluorescent expression, cell spacing, shape,
+                    size, and other high-level features. Future studies must properly
+                    analyze the ability of BLIP-2 to capture relevant features, a property that will have
+                    a significant downstream impact on the LLM’s ability to identify patterns. Further work also hopes
+                    to evaluate several LLMs to identify one that is optimal for analyzing biological data and drawing
+                    conclusions between multiple images.</p>
             </div>
 
             <div class = "small-component">
-                <h2>Uploads</h2>
+                <h2>Details on BLIP-2 model</h2>
+                <p>This page for the BLIP-2 model hopes to properly integrate a seamless pipeline from 
+                    Cellpose segmentation output to BLIP-2 image captioning of important features. 
+                    This will include the ability to upload up to three folders
+                    of image files – e.g. representing control set, experimental set, and an additional set – to be annotated
+                    with mask borders and captioned with BLIP-2. 
+                    
+                    With full integration of the segmentation analyzer, feature extractor, and BLIP-2 model, 
+                    full backend processing will automatically transfer data from the segmentation visualizer to the 
+                    BLIP-2 model. Additionally, it will combine BLIP-2 data with simple data from the feature extracter 
+                    to present fully formated data for optimal LLM pattern identification. The most optimal format must be
+                    quantitatively confirmed through benchmarking, but a potential example format is provided in the 
+                    following section. Please note that the example data is just for demonstration purposes and 
+                    not based on a true model output. </p>
             </div>
 
             <div class = "small-component">
-                <h2>Data from BLIP</h2>
+                <h2>Example output from BLIP-2</h2>
+                <p><b>Control group</b>: [
+                    <br>Image 1: {Caption: <i>Microscopy image showing a cluster of HeLa cells in the right corner. 
+                        Cells display moderate blue signal intensity.</i>,
+                        Average Diameter: 20.2px, Average Intensity: 49 (8-bit)}
+                    <br>Image 2: {Caption: <i>Fluorescent image of HeLa cells stained in blue, 
+                        forming a cluster in the center region. Unidentifiable noise is shown thorughout the image</i>,
+                        Average Diameter: 22.2px, Average Intensity: 54 (8-bit)}
+                    <br>Image 3: ...]
+                <br><b>Testing Group</b>: [
+                    <br>Image 1: {Caption: <i>Cluster of stained HeLa cells spread across the central area, 
+                        exhibiting blue and red fluorescence.</i>,
+                        Average Diameter: 27.3px, Average Intensity: 29 (8-bit)}
+                    <br>Image 2: {Caption: <i>Moderately dispersed HeLa cells, glowing in blue and red fluorescence.</i>,
+                        Average Diameter: 24.9px, Average Intensity: 43 (8-bit)}
+                    <br>Image 3: ...]
+                <br><b>Addtional Group...</b>
+                </p>
+                <br><p>By providing this data to an LLM, it should be able to identify the decreased overall expression, 
+                    increased PI expression, and reduced clustering in the Testingn Group. 
+                </p>
             </div>
 
         </div>

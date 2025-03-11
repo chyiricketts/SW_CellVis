@@ -3,21 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CR SW Cell Visualization Main Page</title>
+    <title>Cell Visualization Main Page</title>
     <link rel="stylesheet" href="../static/css/index.css"> 
 </head>
 
 <body>
     <div class="main-title-container">
         <div class = "main-title-inner-container">
-            <h1 class="main-title">Cell Visualization Main Page</h1>
+            <h1 class="main-title">Post-Segmentation Cell Visualization Main Page</h1>
             <h3>Chyi Ricketts Signature Work</h3>
         </div>
     </div>
 
     <div id = "info">
-        <p>This web-based application is designed to streamline post-segmentation analysis and DL-assisted interpretation of cellular images. Built with researchers in mind, it simplifies data visualization, feature extraction, and automated image captioning, and pattern recognition—all without the need for coding. It contains three main features: Cellpose Segmentation Visualizer, BLIP-2 Image Captioning, and BioGPT Powered Insights. By integrating cutting-edge computer vision and AI language models, this platform makes cellular image analysis faster, more intuitive, and more insightful.
-        <a href="static\sw_pdf\CR SW Draft.pdf" target="_blank">Open Signature Work Paper</a></p>
+        <p>This web-based application is designed to streamline post-segmentation analysis and DL-assisted interpretation of cellular images. Built with researchers in mind, it simplifies data visualization, feature extraction, and automated image captioning, and pattern recognition—all without the need for coding. It contains three main features: Cellpose Segmentation Visualizer, a Feature Extractor, and BLIP-2 Image Captioning. By integrating cutting-edge computer vision and AI language models, this platform makes cellular image analysis faster, more intuitive, and more insightful.
+        <a href="static\sw_pdf\cr353_Ricketts_2025_Huang_SWPaper.pdf" target="_blank">Open Signature Work Paper</a></p>
     </div>
 
     <div class = "title-container">
@@ -26,21 +26,18 @@
 
     <div class="test-container">
         <div class="test-item">
-            <img src="static\indeximgs\wimage-show.png" alt="Image 1">
-            <p>User-input interactive visualization of Cellpose segmented images</p>
+            <img src="static\indeximgs\wimage-show.png" alt="Segmentation Visualization Example Image">
             <button onclick="window.location.href='/open_wholeimage';">Segmentation Visualizer</button>
         </div>
     
         <div class="test-item">
-            <img src="static\indeximgs\multiimage-show.png" alt="Image 2">
-            <p>Automated and Fine-tuned Image Captioning using BLIP-2</p>
-            <button onclick="window.location.href='/open_blip';">Image Captioning</button>
+            <img src="static\indeximgs\featureex-show.png" alt="Feature Extraction Image">
+            <button onclick="window.location.href='/open_featureex';">Feature extraction</button>
         </div>
     
         <div class="test-item">
-            <img src="static\indeximgs\DL-show.png" alt="Image 3">
-            <p>Pattern Recognition with a pre-trained model, BioGPT</p>
-            <button onclick="window.location.href='/open_biogpt';">Pattern Recognition</button>
+            <img src="static\indeximgs\DL-show.png" alt="Image Captioning Image">
+            <button onclick="window.location.href='/open_blip';">Image Captioning</button>
         </div>
     </div>
 

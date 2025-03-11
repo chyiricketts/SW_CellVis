@@ -14,7 +14,7 @@ from PIL import ImageEnhance
 
 app = Flask(__name__)
 
-def generate_image(title_text, color_mode, overlay_mask, axis_toggle, mask_border, brightness_adjust):
+def generate_image(title_text, color_mode, overlay_mask, axis_toggle, mask_border, brightness_adjust, overlay_adjust, border_linewidth, mask_labels):
     """Generate an image with optional mask overlay"""
     img_path = os.path.join("static", "uploads", "pro-siNC.bmp")
     npy_file = os.path.join("static", "uploads", "pro-siNC_seg.npy")
@@ -45,20 +45,22 @@ def generate_image(title_text, color_mode, overlay_mask, axis_toggle, mask_borde
 
     ax.imshow(img, cmap="gray" if color_mode == "Greyscale" else None)
 
-    print("check")
     if title_text:
         ax.set_title(title_text)
         print(f"Title set: {title_text}")  # Debugging check
 
+    overlay_adjust = float(overlay_adjust)
 
     # Overlay mask if enabled
     if overlay_mask:
-        ax.imshow(masks_cells, cmap = "Reds", alpha = 0.5)  # Use a colormap to differentiate masks
+        ax.imshow(masks_cells, cmap = "Reds", alpha = overlay_adjust)  # Use a colormap to differentiate masks
 
     if axis_toggle: 
         ax.axis("on")
     else:
         ax.axis("off")
+
+    border_linewidth = float(border_linewidth)
 
     # Mask Borders, first needs cell_labels defined
     if mask_border:
@@ -67,8 +69,17 @@ def generate_image(title_text, color_mode, overlay_mask, axis_toggle, mask_borde
             print(f"Label {label}: {len(contours)} contours found")  # Debugging line
             for contour in contours:
                 y_coords, x_coords = contour[:, 0], contour[:, 1]
-                ax.plot(x_coords, y_coords, color='red', linewidth=0.5)  # Fixed border plotting
+                ax.plot(x_coords, y_coords, color='red', linewidth=border_linewidth)  # Fixed border plotting
                 #plt.scatter(x_coords, y_coords, s=1, color='red')
+
+    # Mask Labels
+    if mask_labels: 
+         for label in cell_labels:
+                mask_coords = np.argwhere(masks == label)  # Get pixel coordinates of the mask
+                if mask_coords.size > 0:
+                    centroid = np.mean(mask_coords, axis=0)  # Compute centroid
+                    plt.text(centroid[1], centroid[0], str(label), 
+                             color="Red", fontsize=10, fontweight='bold', ha='center', va='center')
 
     save_path = os.path.join("static", "figures", "w_generated_image.png")
     plt.savefig(save_path, format="png", bbox_inches="tight")
@@ -87,26 +98,28 @@ def update_graph():
     axis_toggle = data.get("axis_toggle", False)
     mask_border = data.get("mask_border", False)
     brightness_adjust = data.get("brightness_adjust", 1)
+    overlay_adjust = data.get("overlay_adjust", 0.5)
+    border_linewidth = data.get("border_linewidth", 1)
+    mask_labels = data.get("mask_labels", False)
 
     save_path = os.path.join("static", "figures", "w_generated_image.png")
 
-    generate_image(title_text, color_mode, overlay_mask, axis_toggle, mask_border, brightness_adjust)
+    generate_image(title_text, color_mode, overlay_mask, axis_toggle, mask_border, brightness_adjust, overlay_adjust, border_linewidth, mask_labels)
     return jsonify({"img": f"{save_path}?t={int(time.time())}"})  # Add timestamp to prevent caching
 
 
 @app.route("/open_wholeimage")
 def open_wholeimage():
-    generate_image("", "Original", False, False, False, 1)  # Ensure image is generated
+    generate_image("", "Original", False, False, False, 1, 0.5, 1, False)  # Ensure image is generated
     return render_template("wholeimage2.html", image_path="/static/figures/w_generated_image.png")
+
+@app.route("/open_featureex")
+def open_featureex():
+    return render_template("featureex.html")
 
 @app.route("/open_blip")
 def open_blip():
     return render_template("blip.html")
-
-@app.route("/open_biogpt")
-def open_biogpt():
-    return render_template("biogpt.html")
-
 
 
 @app.route("/")
