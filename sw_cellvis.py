@@ -14,10 +14,28 @@ from PIL import ImageEnhance
 
 app = Flask(__name__)
 
-def generate_image(title_text, color_mode, overlay_mask, axis_toggle, mask_border, brightness_adjust, overlay_adjust, border_linewidth, mask_labels):
+def generate_image(title_text, color_mode, overlay_mask, axis_toggle, mask_border, brightness_adjust, overlay_adjust, border_linewidth, mask_labels, image_choice1, image_choice2, image_choice3):
     """Generate an image with optional mask overlay"""
-    img_path = os.path.join("static", "uploads", "pro-siNC.bmp")
-    npy_file = os.path.join("static", "uploads", "pro-siNC_seg.npy")
+    print("imagechoice: ")
+    print(image_choice1, image_choice2, image_choice3)
+
+    if image_choice1 == True:
+        image_choice = 0
+    elif image_choice2 == True:
+        image_choice = 1
+    elif image_choice3 == True:
+        image_choice = 2
+
+    img_paths = [os.path.join("static", "uploads", "D04F24Composite.bmp"),
+                 os.path.join("static", "uploads", "E10F5Composite.bmp"),
+                 os.path.join("static", "uploads", "F09F38Composite.bmp")]
+
+    npy_paths = [os.path.join("static", "uploads", "D04F24Composite_seg.npy"),
+                 os.path.join("static", "uploads", "E10F5Composite_seg.npy"),
+                 os.path.join("static", "uploads", "F09F38Composite_seg.npy")]
+
+    img_path = img_paths[image_choice]
+    npy_file = npy_paths[image_choice]
 
     img = Image.open(img_path)
     img = np.array(img)
@@ -101,17 +119,20 @@ def update_graph():
     overlay_adjust = data.get("overlay_adjust", 0.5)
     border_linewidth = data.get("border_linewidth", 1)
     mask_labels = data.get("mask_labels", False)
+    image_choice1 = data.get("image_choice1", True)
+    image_choice2 = data.get("image_choice2", False)
+    image_choice3 = data.get("image_choice3", False)
 
     save_path = os.path.join("static", "figures", "w_generated_image.png")
 
-    generate_image(title_text, color_mode, overlay_mask, axis_toggle, mask_border, brightness_adjust, overlay_adjust, border_linewidth, mask_labels)
+    generate_image(title_text, color_mode, overlay_mask, axis_toggle, mask_border, brightness_adjust, overlay_adjust, border_linewidth, mask_labels, image_choice1, image_choice2, image_choice3)
     return jsonify({"img": f"{save_path}?t={int(time.time())}"})  # Add timestamp to prevent caching
 
 
 @app.route("/open_wholeimage")
 def open_wholeimage():
-    generate_image("", "Original", False, False, False, 1, 0.5, 1, False)  # Ensure image is generated
-    return render_template("wholeimage2.html", image_path="/static/figures/w_generated_image.png")
+    generate_image("", "Original", False, False, False, 1, 0.5, 1, False, True, False, False)  # Ensure image is generated
+    return render_template("wholeimage.html", image_path="/static/figures/w_generated_image.png")
 
 @app.route("/open_featureex")
 def open_featureex():

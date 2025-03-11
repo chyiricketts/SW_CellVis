@@ -23,29 +23,15 @@
     
         <div class = "container">
 
-            <div class = "components">
-                <div class = "right-data">
-                    <h2>Segmentation Visualizer</h2>
-                    <p>This page is a visualizer tool for analyzing post-segmentation Cellpose files. 
-                        Using an image file (e.g. png, tiff) and a corresponding .npy file, 
-                        it is able to present a user-friendly view of the image data without the use of coding skills. 
-                        JavaScript allows seamless response to update the image, graphed with MatPlotLib. </p>
-                    <br>
-                    <p>Just use the demonstration on the right to toggle your preferences and see the updates!</p>
-                </div>
+            <div class = "big-component">
+                <p>This page is a visualizer tool for analyzing post-segmentation Cellpose files. 
+                    Using an image file (e.g. png, tiff) and a corresponding .npy file, 
+                    it is able to present a user-friendly view of the image data without the use of coding skills. 
+                    JavaScript allows seamless response to update the image, graphed with MatPlotLib. </p>
+                <br>
+                <p>Just use the demonstration below to toggle your preferences and see the updates!</p>
             </div>
 
-            <div class = "spacer"></div>
-
-            <div class = "spacer"></div>
-        
-            <!--Right Side with Generated Image-->
-            <div class = "components">
-                <div class = "middle-image">
-                    <h2>Generated Image:</h2>
-                    <img id="graph_image" src="{{ image_path }}" alt="Generated Image">
-                </div>
-            </div>
 
             <div class = "spacer"></div>
 
@@ -120,8 +106,54 @@
                     <br><br><br>
                 
                     <div class="center-button-container">
-                        <button id="update_button">Update Graph</button>
+                        <button class = "update_button" id="update_button">Update Graph</button>
                     </div>
+                </div>
+            </div>
+
+
+            <div class = "spacer"></div>
+        
+            <!--Right Side with Generated Image-->
+            <div class = "components">
+                <div class = "middle-image">
+                    <h2>Generated Image:</h2>
+                    <img id="graph_image" src="{{ image_path }}" alt="Generated Image">
+                </div>
+            </div>
+
+            <div class = "spacer"></div>
+
+            <div class = "components">
+                <div class = "right-data">
+                    <h2>Choose the file to view</h2>
+                    <p>Just select one of the following options to change the image</p>
+
+                    <br><br>
+
+                    <div class="checkbox-container">
+                        <input type="checkbox" id="image_choice1" class = "exclusive-checkbox" checked>
+                        <label for="image_choice">First Sample Image</label>
+                    </div>
+
+                    <br>
+
+                    <div class="checkbox-container">
+                        <input type="checkbox" id="image_choice2" class = "exclusive-checkbox">
+                        <label for="image_choice">Second Sample Image</label>
+
+                    </div>
+
+                    <br>
+
+                    <div class="checkbox-container">
+                        <input type="checkbox" id="image_choice3" class = "exclusive-checkbox">
+                        <label for="image_choice">Third Sample Image: </label>
+                    </div>
+
+                    <br><br><br>
+
+                    <p>Soon to have capabilities to upload your own file</p>
                 </div>
             </div>
 
@@ -140,6 +172,9 @@
                     let overlayAdjust = $("#overlay_adjust").val();
                     let borderLinewidth = $("#border_linewidth").val();
                     let maskLabels = $("#mask_labels").is(":checked");
+                    let imageChoice1 = $("#image_choice1").is(":checked");
+                    let imageChoice2 = $("#image_choice2").is(":checked");
+                    let imageChoice3 = $("#image_choice3").is(":checked");
 
     
                     $.ajax({
@@ -155,7 +190,10 @@
                             brightness_adjust: brightnessAdjust,
                             overlay_adjust: overlayAdjust,
                             border_linewidth: borderLinewidth,
-                            mask_labels: maskLabels
+                            mask_labels: maskLabels,
+                            image_choice1: imageChoice1,
+                            image_choice2: imageChoice2,
+                            image_choice3: imageChoice3
                         }),
                         
                         success: function(response) {
@@ -167,6 +205,21 @@
     
                 $("#update_button").click(updateGraph);
             });
+
+
+            
+            document.querySelectorAll('.exclusive-checkbox').forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    if (this.checked) {
+                        document.querySelectorAll('.exclusive-checkbox').forEach(other => {
+                            if (other !== this) {
+                                other.checked = false;
+                            }
+                        });
+                    }
+                });
+            });
+
         </script>
     
     </body>

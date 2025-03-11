@@ -115,7 +115,7 @@ img {
     align-items: center;  /* Optionally center vertically */
 }
 
-#update_button {
+.update_button {
     background: var(--greyLight-2);
     border: none;
     padding: 10px 20px;
@@ -127,7 +127,7 @@ img {
 }
 
 /* Button on hover */
-#update_button:hover {
+.update_button:hover {
     background-color: var(--greyLight-3);
 }
 
@@ -159,6 +159,23 @@ img {
     padding: 4rem;
     align-items: center;
 }
+
+.big-component {
+    flex: 1 1 100rem; /* Grow and shrink with a base size of 30rem */
+    width: min(90%, 100rem); /* Ensures it doesn't get too big */
+    max-width: 1000px;
+    min-height: 5rem;
+    border-radius: 3rem;
+    box-shadow:.8rem .8rem 1.4rem var(--greyLight-2), 
+              -.2rem -.2rem 1.8rem var(--white);
+    padding: 4rem;
+    align-items: center;
+}
+
+.big-component p {
+    font-size: 20px;
+}
+
 
 .container h2 {
     margin: 0 0 30px;
@@ -281,6 +298,7 @@ img {
 
 .right-data p {
     font-size: 20px;
+    text-align: center;
 }
 
 
