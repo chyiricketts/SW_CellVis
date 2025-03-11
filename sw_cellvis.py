@@ -112,7 +112,7 @@ def generate_image(title_text, color_mode, overlay_mask, axis_toggle, mask_borde
 
 
 
-def compile_feature_data(image_choice1, image_choice2, image_choice3, show_average, show_individual, show_sizes, show_cellcenters, show_intensity):
+def compile_feature_data(image_choice1, image_choice2, image_choice3, show_average, show_individual, show_sizes, show_cellcenters, show_intensity, color_mode):
     
     output = ""
 
@@ -147,20 +147,44 @@ def compile_feature_data(image_choice1, image_choice2, image_choice3, show_avera
     mean_y = round(mean_y, 4)
 
     # Mean Intensity
+    img_check = Image.open(img_path)
+    if img_check.mode != "L":  # "L" mode in PIL means grayscale
+        image_gray_version = img_check.convert("L")
+    img_gray = np.array(image_gray_version)
+
     cell_intensities = {}
     for label in unique_labels:
-        cell_pixels = img[masks == label]
+        cell_pixels = img_gray[masks == label]
         mean_intensity = np.mean(cell_pixels)
         cell_intensities[label] = round(mean_intensity, 4)
     mean_cell_intensity = np.mean(list(cell_intensities.values()))
     mean_cell_intensity = round(mean_cell_intensity, 4)
 
+    # Intensity channels
+    image = Image.open(img_path).convert("RGB")
+    img_rgb = np.array(image)
 
-    print("Diameters")
-    print(cell_centers)
-    print(cell_intensities)
-    print(pixel_counts)
-    print("---------------------")
+    red_channel = img_rgb[:, :, 0]
+    green_channel = img_rgb[:, :, 1]
+    blue_channel = img_rgb[:, :, 2]
+
+    mean_red_intensity = round(np.mean(red_channel), 4)
+    mean_green_intensity = round(np.mean(green_channel), 4)
+    mean_blue_intensity = round(np.mean(blue_channel), 4)
+
+    cell_rgb_intensities = {}
+    for label in cell_labels:
+        mask = (masks == label)
+        
+        red_intensity = np.mean(red_channel[mask])
+        green_intensity = np.mean(green_channel[mask])
+        blue_intensity = np.mean(blue_channel[mask])
+
+        cell_rgb_intensities[label] = {
+            "Red": round(red_intensity, 4),
+            "Green": round(green_intensity, 4),
+            "Blue": round(blue_intensity, 4)
+        }
 
     if show_sizes: 
         output += ("<b>Cell Sizes </b><br>")
@@ -180,15 +204,40 @@ def compile_feature_data(image_choice1, image_choice2, image_choice3, show_avera
                 output += (f"Mask {mask}: {cell_centers[mask]}<br>")
             output += ("<br>")
     
-    print(f"show intensity: {show_intensity}")
-    if show_intensity: 
-        output += ("<b>Intensities </b><br>")
+    if show_intensity and color_mode == "Average":
+        output += ("<b>Intensities from Greyscale</b><br>")
         if show_average:
             output += (f"<b>Average: </b> {mean_cell_intensity}<br>")
         if show_individual:
             for mask in cell_labels:
                 output += (f"Mask {mask}: {cell_intensities[mask]}<br>")
             output += ("<br>")
+
+    if show_intensity and color_mode == "Red":
+        output += ("<b>Red Channel Intensities </b><br>")
+        if show_average:
+            output += (f"<b>Average: </b> {mean_red_intensity}<br>")
+        if show_individual:
+            for mask in cell_labels:
+                output += (f"Mask {mask}: {cell_rgb_intensities[mask]['Red']}<br>")
+            output += ("<br>")
+    if show_intensity and color_mode == "Green":
+        output += ("<b>Green Channel Intensities </b><br>")
+        if show_average:
+            output += (f"<b>Average: </b> {mean_green_intensity}<br>")
+        if show_individual:
+            for mask in cell_labels:
+                output += (f"Mask {mask}: {cell_rgb_intensities[mask]['Green']}<br>")
+            output += ("<br>")
+    if show_intensity and color_mode == "Blue":
+        output += ("<b>Blue Channel Intensities </b><br>")
+        if show_average:
+            output += (f"<b>Average: </b> {mean_blue_intensity}<br>")
+        if show_individual:
+            for mask in cell_labels:
+                output += (f"Mask {mask}: {cell_rgb_intensities[mask]['Blue']}<br>")
+            output += ("<br>")
+
 
 
     if output == "":
@@ -237,8 +286,9 @@ def show_data():
     show_sizes = data.get("show_sizes", False)
     show_cellcenters = data.get("show_cellcenters", False)
     show_intensity = data.get("show_intensity", False)
+    color_mode = data.get("color_mode", "Average")
 
-    paragraph = compile_feature_data(image_choice1, image_choice2, image_choice3, show_average, show_individual, show_sizes, show_cellcenters, show_intensity)
+    paragraph = compile_feature_data(image_choice1, image_choice2, image_choice3, show_average, show_individual, show_sizes, show_cellcenters, show_intensity, color_mode)
     return jsonify({
         "img": img_path,
         "text": f"<p>{paragraph}</p>"
@@ -253,13 +303,12 @@ def open_wholeimage():
 
 @app.route("/open_featureex")
 def open_featureex():
-    compile_feature_data(True, False, False, True, False, False, False, False)
+    compile_feature_data(True, False, False, True, False, False, False, False, "Average")
     return render_template("featureex.html")
 
 @app.route("/open_blip")
 def open_blip():
     return render_template("blip.html")
-
 
 @app.route("/")
 def index():

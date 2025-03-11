@@ -25,11 +25,11 @@
 
             <div class = "big-component">
                 <p>This page is a feature extraction tool for analyzing post-segmentation Cellpose files. 
-                    Using an image file (e.g. png, tiff) and a corresponding .npy file, 
-                    it is able to present a user-friendly view of the image data without the use of coding skills. 
-                    JavaScript allows seamless response to update the image, graphed with MatPlotLib. </p>
+                    It extracts and calculates simple features from the segmentation files such as 
+                    diameter, cell center, and intensity. Reacting to user-input, it can show the averages
+                    across the image or individual values per mask. </p>
                 <br>
-                <p>Just use the demonstration on the right to toggle your preferences and see the updates!</p>
+                <p>Just use the demonstration below to toggle your preferences and see the data!</p>
             </div>
 
             <div class = "spacer"></div>
@@ -105,6 +105,15 @@
                         <label for="show_intensity">Intensity</label>
                     </div>
 
+                    <label for="color_mode">Intensity Channel:</label>
+                    <select id="color_mode">
+                        <option value="Average">From Greyscale</option>
+                        <option value="Red">Red</option>
+                        <option value="Green">Green</option>
+                        <option value="Blue">Blue</option>
+                    </select>
+
+
                     <br><br>
 
                     <div class="center-button-container">
@@ -133,7 +142,7 @@
                 <div class = "right-data">
                     <h2>Feature Data</h2>
                     <div id="output">
-                        <p>Feature Data will appear here!</p>
+                        <p>Feature Data will appear here!<br>Just start with the 'Show Data' button</p>
                     </div>
                 </div>
             </div>
@@ -152,6 +161,7 @@
                     let showSizes = $("#show_sizes").is(":checked");
                     let showCellcenters = $("#show_cellcenters").is(":checked");
                     let showIntensity = $("#show_intensity").is(":checked");
+                    let colorMode = $("#color_mode").val();
 
     
                     $.ajax({
@@ -166,7 +176,8 @@
                             show_individual: showIndividual,
                             show_sizes: showSizes,
                             show_cellcenters: showCellcenters,
-                            show_intensity: showIntensity
+                            show_intensity: showIntensity,
+                            color_mode: colorMode
                         }),
                         
                         success: function(response) {
