@@ -34,11 +34,15 @@ html {
     background: var(--greyLight-1);
     overflow-x: hidden;
     width: 100%;
-  
-    @media screen and (min-width: 900px) {
-      font-size: 75%;
+}
+
+@media screen and (min-width: 900px) {
+    html {
+        font-size: 75%;
     }
-  }
+}
+
+
   
 
 html, body{
@@ -135,6 +139,9 @@ img {
 .container {
     height: auto;
     min-height: 80vh; /* Keep if needed */
+    max-width: 1550px;
+    width: 100%;
+    margin: 0 auto;
     overflow: hidden; /* Prevent excessive scroll */
 
     display: flex;

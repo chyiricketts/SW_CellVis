@@ -134,7 +134,11 @@ img {
   
 .container {
     height: auto;
-    min-height: 80vh; /* Keep if needed */
+    min-height: 80vh;
+    max-width: 1550px;
+    width: 100%;
+    margin: 0 auto;
+
     overflow: hidden; /* Prevent excessive scroll */
 
     display: flex;
