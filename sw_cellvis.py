@@ -300,12 +300,14 @@ def show_data():
 
 @app.route("/open_wholeimage")
 def open_wholeimage():
-    generate_image("", "Original", False, False, False, 1, 0.5, 1, False, True, False, False)  # Ensure image is generated
+    # changed the 5th to true
+    generate_image("", "Original", False, False, True, 1, 0.5, 1, False, True, False, False)  # Ensure image is generated
     return render_template("wholeimage.html", image_path="/static/figures/w_generated_image.png")
 
 @app.route("/open_featureex")
 def open_featureex():
-    compile_feature_data(True, False, False, True, False, False, False, False, "Average")
+    # changed the 6th to true
+    compile_feature_data(True, False, False, True, False, True, False, False, "Average")
     return render_template("featureex.html")
 
 @app.route("/open_blip")
