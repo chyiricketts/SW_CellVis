@@ -254,7 +254,8 @@ def update_graph():
     color_mode = data.get("color_mode", "Original")
     overlay_mask = data.get("overlay_mask", False)
     axis_toggle = data.get("axis_toggle", False)
-    mask_border = data.get("mask_border", False)
+    # changed mask border to True
+    mask_border = data.get("mask_border", True)
     brightness_adjust = data.get("brightness_adjust", 1)
     overlay_adjust = data.get("overlay_adjust", 0.5)
     border_linewidth = data.get("border_linewidth", 1)
@@ -283,7 +284,8 @@ def show_data():
     image_choice3 = data.get("image_choice3", False)
     show_average = data.get("show_average", True)
     show_individual = data.get("show_individual", False)
-    show_sizes = data.get("show_sizes", False)
+    # changed show_sizes to true
+    show_sizes = data.get("show_sizes", True)
     show_cellcenters = data.get("show_cellcenters", False)
     show_intensity = data.get("show_intensity", False)
     color_mode = data.get("color_mode", "Average")
