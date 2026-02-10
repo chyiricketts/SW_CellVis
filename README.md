@@ -29,4 +29,10 @@ This web application takes both the original imaging file and .npy file as input
 
 
 ### Future Work: 
+I envision this website to have many possible future updates.
+Currently, the feature of uploading a user's own images and .npy files for feature extraction is under construction.
+Subsequently, additional feature extraction options and tools will become avaliable. 
 
+In the future, this model can be extended to operate on the output of many different, commonly used cellular segmentation software.
+
+During this project, it was envisioned that this web application could serve as a platform for a computational processing pipeline from imaging data to language-based pattern identification through the use of an image captioning model such as BLIP-2.
