@@ -4,6 +4,7 @@ This project was made for Duke Kunshan Undergraduate Signature Work Project 2025
 
 This repository contains: 
 - README file
+- requirements: the required packages to deploy as a web application
 - sw_cellvis: the python backend for data processing
 - templates: HTML files for the frontend of the website
 - Static: C
